@@ -26,7 +26,7 @@ class HomeFinderRoutes < Sinatra::Base
 	end
 
 	get '/' do; 200; end
-	
+
 	get '/homefinder' do; erb :homefinder; end
 
 	post '/homefinder' do
@@ -136,7 +136,7 @@ class MyApp < Sinatra::Base
 	app_name = ENV['HOMEFINDER_APP_NAME']
 	app_id = ENV['HOMEFINDER_APP_ID']
 	$did = ENV['HOMEFINDER_DID']
-	$web_server = ENV['LB_WEB_SERVER'] || JSON.parse(Net::HTTP.get(URI('http://127.0.0.1:4040/api/tunnels')))['tunnels'][0]['public_url']
+	$web_server = ENV['LB_WEB_SERVER2'] || JSON.parse(Net::HTTP.get(URI('http://127.0.0.1:4040/api/tunnels')))['tunnels'][0]['public_url']
 
 	# Create Nexmo Object
 	logger = Logger.new(STDOUT)
