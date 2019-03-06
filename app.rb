@@ -21,8 +21,8 @@ class HomeFinderRoutes < Sinatra::Base
 
 	post '/event_home' do
 		root_url = request.base_url
-		request_payload = JSON.parse(request.body.read, symbolize_names: true)
-		response = $nexmo.home_finder_event(request_payload,root_url)
+		puts "#{__method__} | My Params: #{params}"
+		response = $nexmo.home_finder_event(params,root_url)
 	end
 
 	get '/' do; 200; end
@@ -36,7 +36,6 @@ class HomeFinderRoutes < Sinatra::Base
 		200
 	end
 
-
 end
 
 
@@ -49,8 +48,8 @@ class HomeFinderNexmoController < NexmoBasicController
 
 	def home_finder_event(request_payload,root_url)
 		puts "#{__method__} | #{request_payload}"
-		keyword = request_payload[:keyword] || nil
-		phone_number = request_payload[:msisdn]	
+		keyword = request_payload['keyword'] || nil
+		phone_number = request_payload['msisdn']	
 
 		puts "Got my keyword: #{keyword}"
 		if request_payload != nil
@@ -88,7 +87,8 @@ class HomeFinderNexmoController < NexmoBasicController
 	end	
 
 	def handle_show(phone_number)
-		msg = "Here is the link to the house.  Respond with SCHEDULE to reserve a time to see the house or SEE to get a live look with a Realtor right now"
+		link = "https://www.njmls.com/listings/index.cfm?action=dsp.info&mlsnum=1840146"
+		msg = "Here is the link to the house: #{link}.  Respond with SCHEDULE to reserve a time to see the house or SEE to get a live look with a Realtor right now"
 		$nexmo.send_sms(msg,phone_number)
 	end
 
@@ -98,7 +98,13 @@ class HomeFinderNexmoController < NexmoBasicController
 	end
 
 	def handle_see(phone_number)
-		msg = "Please click on the link to initiate a live virtual tour with the Realtor"
+		agent_link = "#{$tokbox_url}#{phone_number}?userName=AGENT&skip=yes"
+		msg = "A buyer would like a virtul tour: #{agent_link}"
+		$nexmo.send_sms(msg,phone_number)
+
+		client_link = "#{$tokbox_url}#{phone_number}?userName=Buyer&skip=yes"
+		msg = "Please click on the link to initiate a live virtual tour with the Realtor: #{client_link}"
+		$nexmo.send_sms(msg,phone_number)
 	end
 
 	def handle_map(phone_number)
@@ -110,6 +116,10 @@ class HomeFinderNexmoController < NexmoBasicController
 	def handle_error(phone_number)
 	end
 
+	def validate(input)
+		alpha_nums = ('a'..'z').to_a + ('A'..'Z').to_a + (0..9).to_a
+		return alpha_nums unless input.chars.all? {|ch| alpha_nums.include?(ch)}
+	end
 end
 
 class MyApp < Sinatra::Base
@@ -132,6 +142,8 @@ class MyApp < Sinatra::Base
 	sec = ENV['NEXMO_API_SECRET']
 	app_key = ENV['NEXMO_APPLICATION_PRIVATE_KEY_PATH']
 
+	# Tokbox Base URL
+	$tokbox_url = ENV['TOXBOX_URL']
 	# Nexmo App Specific Details
 	app_name = ENV['HOMEFINDER_APP_NAME']
 	app_id = ENV['HOMEFINDER_APP_ID']
