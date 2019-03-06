@@ -14,6 +14,14 @@ class NexmoBasicController
 		puts "Updated nexmo application name:\n  #{application.name}\nwith webhooks:\n  #{application.voice.webhooks[0].endpoint}\n  #{application.voice.webhooks[1].endpoint}"
 	end
 
+	def update_number(country,msisdn,update_params)
+		puts "#{__method__} | My vars: Country Code: #{country}, Number: #{msisdn}, Params: #{update_params}"
+		update_params.merge!({country: country, msisdn: msisdn})
+
+		number = $client.numbers.update(update_params)
+	end
+
+
 	def send_sms(msg,to=nil)
 		puts "#{__method__}; SMS from: #{$did} to: #{to} msg: #{msg}"
 		return $client.sms.send(from: $did, to: to, text: msg)
