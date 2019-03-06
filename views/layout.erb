@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en" itemscope itemtype="http://schema.org/Article">
+  <head>
+    <link rel="icon" type="image/ico" href="https://d2gl3otkt8l7qr.cloudfront.net/favicon.png">
+ 		<link rel="stylesheet" href="https://d2gl3otkt8l7qr.cloudfront.net/assets/1.2/dist/css/volta.css">
+  </head>
+  
+  <div class="Vlt-margin--top3 Vlt-margin--M-top2 Vlt-margin--S-top1">
+  <body class="area--components section--grid page--grid Vlt-body--has-sidenav">
+  	<div class="Vlt-col">
+	  	<header class="Vlt-header">
+	  		<div class="Vlt-grid">
+	  			<div class="Vlt-col">
+	  				<div class="Vlt-grid">
+			  			<div class="Vlt-col Vlt-col--1of2">
+	          		<div class="Vlt-header__logo">
+	              	<a href="/user" >
+	                	<img src="https://www.vonage.com/assets/images/logo-vonage.svg#volta">
+	              	</a>
+	            	</div>
+			  			</div>
+		  			</div>
+		  		</div>
+		  		<div class="Vlt-col Vlt-col--1of4">
+			  		<div class="Vlt-header__menu">
+							<div class="top-navigation Vlt-tabs__header">
+								<a class="Vlt-tabs__link" href="/user" id="area--about">My Info</a>
+								<a class="Vlt-tabs__link Vlt-tabs__link_active" href="/calls" id="area--styles">My Calls</a>
+								<a class="Vlt-tabs__link" href="/logout" id="area--components">Unregister</a>
+							</div>  			
+			  		</div>
+			  	</div>		  	
+<!-- 			  	<div class="Vlt-col Vlt-col--4of4 Vlt-right">
+			  		<% if session.has_key?(:user) && session[:user].has_key?(:email_address) %>
+			  			<% if session[:user][:existing_user]%>
+			  				<p><%=session[:user][:existing_user]%></p>
+			  			<% else %>
+			  				<p>Welome New User</p>
+		  				<% end %>
+			  			<p><a href="/user"><%=session[:user][:email_address]%></a></p>
+		  			<% else %>
+		  				<h4>Not Registered</h4>
+	  				<% end %>
+			  	</div>	 -->		  	
+		  	</div>
+	  	</header>
+	  </div>
+	  <div class="Vlt-col">
+	  	<div class="Vlt-grid">
+	  		<div class="Vlt-col Vlt-col--1of4">	  			
+	  		</div>
+			  <div class="Vlt-col Vlt-col--2of4">
+			  	<main class="Vlt-article">
+			  		<h3><%=@title%></h3>
+						<%= yield %>
+					</main>
+				</div>
+  		</div>
+  	</div>
+    <script type="text/javascript" src="https://s3-us-west-2.amazonaws.com/assets-petesweb.io/assets/1.2/js/svgxuse.min.js"></script>
+    <script type="text/javascript" src="https://s3-us-west-2.amazonaws.com/assets-petesweb.io/assets/1.2/dist/js/volta.min.js"/> 
+		<script type="text/javascript">
+		    Volta.init();
+		</script>     	
+</body>
+
+
+</html>
+
+
