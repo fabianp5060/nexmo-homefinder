@@ -27,13 +27,51 @@ class HomeFinderRoutes < Sinatra::Base
 
 	get '/' do; 200; end
 
-	get '/homefinder' do; erb :homefinder; end
+	get '/login' do
+		@title = "Login as Agent"
+		erb :login
+	end
+
+	post '/login' do
+		puts "#{__method__} | Params : #{params}"
+
+		agent_name = params[:agent_name]
+		agent_number = params[:agent_number]
+
+		db = UserDB.first_or_create(
+			agent_name: agent_name,
+			agent_number: agent_number
+		)
+		puts "#{__method__} | DB Result : #{db.inspect}"
+
+		redirect "/homefinder?agent_number=#{agent_number}"
+	end
+
+	get '/homefinder' do
+		puts "#{__method__} | Params : #{params}"
+
+		@title = "Start Geo-Fence Demo"
+		@agent_number = params[:agent_number]
+
+		erb :homefinder
+	end
 
 	post '/homefinder' do
-		msg = "Hi there, we see you are close to a home that matches your search criteria.  Respond with SHOW to retrieve the MLS listing for the home or MAP to get directions sent to your phone"
-		$nexmo.send_sms(msg,params['phone_number'])
+		puts "#{__method__} | Params : #{params}"
 
-		200
+		buyer_number = params[:buyer_number]
+		db = UserDB.last(agent_number: params[:agent_number]).update(buyer_number: buyer_number)
+		puts "#{__method__} | DB Result : #{db.inspect}"
+
+		msg = "Hi there, we see you are close to a home that matches your search criteria.  Respond with SHOW to retrieve the MLS listing for the home or MAP to get directions sent to your phone"
+		$nexmo.send_sms(msg,buyer_number)
+
+		redirect "/agent/#{params[:agent_number]}"
+	end
+
+	get '/agent/:agent_number' do
+		@buyers_for_agent = UserDB.all(agent_number: params[:agent_number])
+		erb :agent
 	end
 
 end
@@ -122,6 +160,23 @@ class HomeFinderNexmoController < NexmoBasicController
 	end
 end
 
+################################################
+# Database Specific Controls
+################################################
+
+# Configure in-memory DB
+DataMapper.setup(:default, "sqlite3://#{Dir.pwd}/auth.db")
+
+class UserDB
+	include DataMapper::Resource
+	property :id, Serial
+	property :agent_name, String
+	property :agent_number, String	
+	property :buyer_number, String
+
+end
+
+
 class MyApp < Sinatra::Base
 	
 	configure do 
@@ -162,8 +217,6 @@ class MyApp < Sinatra::Base
 
 	$nexmo = HomeFinderNexmoController.new  	
 	$nexmo.update_webserver(app_id,$web_server,app_name)
+
+	UserDB.auto_migrate!
 end
-
-
-
-
