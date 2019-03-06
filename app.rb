@@ -25,6 +25,8 @@ class HomeFinderRoutes < Sinatra::Base
 		response = $nexmo.home_finder_event(request_payload,root_url)
 	end
 
+	get '/' do; 200; end
+	
 	get '/homefinder' do; erb :homefinder; end
 
 	post '/homefinder' do
