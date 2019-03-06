@@ -136,13 +136,25 @@ class HomeFinderNexmoController < NexmoBasicController
 	end
 
 	def handle_see(phone_number)
-		agent_link = "#{$tokbox_url}#{phone_number}?userName=AGENT&skip=yes"
-		msg = "A buyer would like a virtul tour: #{agent_link}"
-		$nexmo.send_sms(msg,phone_number)
+		db_info = UserDB.last(buyer_number: phone_number)
 
+		buyer_msg = nil
+		if db_info && db_info.agent_number
+			agent_link = "#{$tokbox_url}#{phone_number}?userName=AGENT&skip=yes"
+			msg = "A buyer would like a virtul tour: #{agent_link}"
+			# $nexmo.send_sms(msg,db_info.agent_number)
+			puts "I would send SMS to: #{db_info.agent_number} with msg: #{msg}"
+		else
+			buyer_msg = "Sorry, we could not find an agent associated with your phone number"
+		end
+		# Make sure messages are not throttled by Nexmo / Carrier
+		sleep(1)
+
+		#If agent exists for Buyer send message, otherwise send error message
 		client_link = "#{$tokbox_url}#{phone_number}?userName=Buyer&skip=yes"
-		msg = "Please click on the link to initiate a live virtual tour with the Realtor: #{client_link}"
-		$nexmo.send_sms(msg,phone_number)
+		buyer_msg = "Please click on the link to initiate a live virtual tour with the Realtor: #{client_link}" unless buyer_msg
+		# $nexmo.send_sms(buyer_msg,phone_number)
+		puts "I would send SMS to: #{phone_number} with msg: #{buyer_msg}"
 	end
 
 	def handle_map(phone_number)
