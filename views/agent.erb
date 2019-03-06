@@ -1,0 +1,19 @@
+<div class="Vlt-table Vlt-table--data">
+	<h3>List of Buyers for Agent: <%=@buyers_for_agent[0].agent_name%></h3>
+	<table>
+		<thead>
+			<tr>
+				<th><b>Agent Number</b></th>
+				<th><b>Buyer Number</b></th>
+			</tr>		
+		</thead>
+		<tbody>
+			<% @buyers_for_agent.each do |buyer| %>
+				<tr>
+					<td><a href="/buyer/<%=buyer.buyer_number%>"><%=buyer.buyer_number%></td>
+					<td><%=buyer.agent_number%></td>
+				</tr>
+			<% end %>
+		</tbody>
+	</table>
+</div>
