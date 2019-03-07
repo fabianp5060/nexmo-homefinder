@@ -27,4 +27,24 @@ class NexmoBasicController
 		return $client.sms.send(from: $did, to: to, text: msg)
 	end	
 
+	def normalize_numbers(num)
+		if num.to_s =~ /^\d{10}$/
+			puts "#{__method__} | Normalizing number: #{num}"
+			num = "1#{num}"
+		end	
+		return num	
+	end	
+
+	def validate(input)
+		alpha_nums = ('a'..'z').to_a + ('A'..'Z').to_a + (0..9).to_a + ("0".."9").to_a
+		return true if input.chars.all? {|ch| alpha_nums.include?(ch)}
+	end
+
+	def sanitize(input)
+		clean_input = input.to_s.gsub(/\s/,"")
+		is_valid = validate(clean_input)
+
+		return normalize_numbers(clean_input) if is_valid
+	end
+
 end

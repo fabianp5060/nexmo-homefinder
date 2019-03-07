@@ -13,6 +13,7 @@ require_relative 'nexmoController'
 
 class HomeFinderRoutes < Sinatra::Base
 
+# Nexmo Specific Endpoints
 	get '/answer_home' do
 		root_url = request.base_url
 		content_type :json		
@@ -25,8 +26,10 @@ class HomeFinderRoutes < Sinatra::Base
 		response = $nexmo.home_finder_event(params,root_url)
 	end
 
+# AWS Health Check
 	get '/' do; 200; end
 
+# App Endpoints
 	get '/login' do
 		@title = "Login as Agent"
 		erb :login
@@ -35,8 +38,8 @@ class HomeFinderRoutes < Sinatra::Base
 	post '/login' do
 		puts "#{__method__} | Params : #{params}"
 
-		agent_name = params[:agent_name]
-		agent_number = params[:agent_number]
+		agent_name = $nexmo.sanitize(params[:agent_name])
+		agent_number = $nexmo.sanitize(params[:agent_number])
 
 		db = UserDB.first_or_create(
 			agent_name: agent_name,
@@ -59,9 +62,11 @@ class HomeFinderRoutes < Sinatra::Base
 	post '/homefinder' do
 		puts "#{__method__} | Params : #{params}"
 
-		buyer_number = params[:buyer_number]
+		buyer_number = $nexmo.sanitize(params[:buyer_number])
+
 		db = UserDB.last(agent_number: params[:agent_number]).update(buyer_number: buyer_number)
 		puts "#{__method__} | DB Result : #{db.inspect}"
+
 
 		msg = "Hi there, we see you are close to a home that matches your search criteria.  Respond with SHOW to retrieve the MLS listing for the home or MAP to get directions sent to your phone"
 		$nexmo.send_sms(msg,buyer_number)
@@ -142,7 +147,6 @@ class HomeFinderNexmoController < NexmoBasicController
 		if db_info && db_info.agent_number
 			agent_link = "#{$tokbox_url}#{phone_number}?userName=AGENT&skip=yes"
 			msg = "A buyer would like a virtul tour: #{agent_link}"
-			puts "#{__method__} | Sending SMS to: #{db_info.agent_number} with msg: #{msg}"			
 			$nexmo.send_sms(msg,db_info.agent_number)
 		else
 			buyer_msg = "Sorry, we could not find an agent associated with your phone number"
@@ -153,7 +157,6 @@ class HomeFinderNexmoController < NexmoBasicController
 		#If agent exists for Buyer send message, otherwise send error message
 		client_link = "#{$tokbox_url}#{phone_number}?userName=Buyer&skip=yes"
 		buyer_msg = "Please click on the link to initiate a live virtual tour with the Realtor: #{client_link}" unless buyer_msg
-		puts "#{__method__} | Sending SMS to: #{phone_number} with msg: #{buyer_msg}"
 		$nexmo.send_sms(buyer_msg,phone_number)
 		
 	end
@@ -165,11 +168,6 @@ class HomeFinderNexmoController < NexmoBasicController
 	end
 
 	def handle_error(phone_number)
-	end
-
-	def validate(input)
-		alpha_nums = ('a'..'z').to_a + ('A'..'Z').to_a + (0..9).to_a
-		return alpha_nums unless input.chars.all? {|ch| alpha_nums.include?(ch)}
 	end
 end
 
