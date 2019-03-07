@@ -32,6 +32,9 @@ class HomeFinderRoutes < Sinatra::Base
 # App Endpoints
 	get '/login' do
 		@title = "Login as Agent"
+		if params.include?(:error)
+			@title = "Please re-enter your Name and Number and only use Alphanumeric values."
+		end
 		erb :login
 	end
 
@@ -41,11 +44,15 @@ class HomeFinderRoutes < Sinatra::Base
 		agent_name = $nexmo.sanitize(params[:agent_name])
 		agent_number = $nexmo.sanitize(params[:agent_number])
 
-		db = UserDB.first_or_create(
-			agent_name: agent_name,
-			agent_number: agent_number
-		)
-		puts "#{__method__} | DB Result : #{db.inspect}"
+		if agent_number
+			db = UserDB.first_or_create(
+				agent_name: agent_name,
+				agent_number: agent_number
+			)
+			puts "#{__method__} | DB Result : #{db.inspect}"
+		else	
+			redirect "/login?error=true"
+		end
 
 		redirect "/homefinder?agent_number=#{agent_number}"
 	end
@@ -54,6 +61,10 @@ class HomeFinderRoutes < Sinatra::Base
 		puts "#{__method__} | Params : #{params}"
 
 		@title = "Start Geo-Fence Demo"
+		if params.include?(:error)
+			@title = "Please re-enter the Buyers Phone Number and only use Alphanumeric values."
+		end
+
 		@agent_number = params[:agent_number]
 
 		erb :homefinder
@@ -64,12 +75,16 @@ class HomeFinderRoutes < Sinatra::Base
 
 		buyer_number = $nexmo.sanitize(params[:buyer_number])
 
-		db = UserDB.last(agent_number: params[:agent_number]).update(buyer_number: buyer_number)
-		puts "#{__method__} | DB Result : #{db.inspect}"
+		if buyer_number
+			db = UserDB.last(agent_number: params[:agent_number]).update(buyer_number: buyer_number)
+			puts "#{__method__} | DB Result : #{db.inspect}"
 
 
-		msg = "Hi there, we see you are close to a home that matches your search criteria.  Respond with SHOW to retrieve the MLS listing for the home or MAP to get directions sent to your phone"
-		$nexmo.send_sms(msg,buyer_number)
+			msg = "Hi there, we see you are close to a home that matches your search criteria.  Respond with SHOW to retrieve the MLS listing for the home or MAP to get directions sent to your phone"
+			$nexmo.send_sms(msg,buyer_number)
+		else
+			redirect "/homefinder?error=true&agent_number=#{params[:agent_number]}"
+		end
 
 		redirect "/agent/#{params[:agent_number]}"
 	end
