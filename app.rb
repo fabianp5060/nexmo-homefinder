@@ -30,6 +30,13 @@ class HomeFinderRoutes < Sinatra::Base
 	get '/' do; 200; end
 
 # App Endpoints
+
+	get '/logout' do
+		UserDB.destroy
+
+		redirect '/login'
+	end
+
 	get '/login' do
 		@title = "Login as Agent"
 		if params.include?(:error)
@@ -171,7 +178,7 @@ class HomeFinderNexmoController < NexmoBasicController
 
 		#If agent exists for Buyer send message, otherwise send error message
 		client_link = "#{$tokbox_url}#{phone_number}?userName=Buyer&skip=yes"
-		buyer_msg = "Virtual Realtor: #{client_link}" unless buyer_msg
+		buyer_msg = "Realtor: #{client_link}" unless buyer_msg
 		$nexmo.send_sms(buyer_msg,phone_number)
 		
 	end
