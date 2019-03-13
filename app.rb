@@ -161,7 +161,7 @@ class HomeFinderNexmoController < NexmoBasicController
 		buyer_msg = nil
 		if db_info && db_info.agent_number
 			agent_link = "#{$tokbox_url}#{phone_number}?userName=AGENT&skip=yes"
-			msg = "A buyer would like a virtul tour: #{agent_link}"
+			msg = "Start virtul tour: #{agent_link}"
 			$nexmo.send_sms(msg,db_info.agent_number)
 		else
 			buyer_msg = "Sorry, we could not find an agent associated with your phone number"
@@ -171,7 +171,7 @@ class HomeFinderNexmoController < NexmoBasicController
 
 		#If agent exists for Buyer send message, otherwise send error message
 		client_link = "#{$tokbox_url}#{phone_number}?userName=Buyer&skip=yes"
-		buyer_msg = "Please click on the link to initiate a live virtual tour with the Realtor: #{client_link}" unless buyer_msg
+		buyer_msg = "Virtual Realtor: #{client_link}" unless buyer_msg
 		$nexmo.send_sms(buyer_msg,phone_number)
 		
 	end

@@ -2,6 +2,7 @@ app.key
 credentials.json
 token.yaml
 client_secrets.json
+test-data.rb
 
 *.gem
 *.rbc
