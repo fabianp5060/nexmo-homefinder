@@ -10,8 +10,8 @@
 		<tbody>
 			<% @buyers_for_agent.each do |buyer| %>
 				<tr>
-					<td><a href="/buyer/<%=buyer.buyer_number%>"><%=buyer.buyer_number%></td>
 					<td><%=buyer.agent_number%></td>
+					<td><a href="/buyer/<%=buyer.buyer_number%>"><%=buyer.buyer_number%></td>
 				</tr>
 			<% end %>
 		</tbody>
