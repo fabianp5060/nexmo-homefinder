@@ -10,6 +10,7 @@ require 'dm-migrations'
 require 'json'
 
 require_relative 'nexmoController'
+require_relative 'time_check'
 
 class HomeFinderRoutes < Sinatra::Base
 
@@ -132,6 +133,9 @@ class HomeFinderNexmoController < NexmoBasicController
 			when "MAP"
 				puts "Made it to MAP"
 				handle_map(phone_number)
+			when "TIME"
+				puts "Made it to Time"
+				handle_time(phone_number)
 			else
 				puts "DID Not find matching KEYWORD"
 				handle_error(phone_number)
@@ -160,6 +164,12 @@ class HomeFinderNexmoController < NexmoBasicController
 	def handle_schedule(phone_number)
 		msg = "I will schedule a call thank you!.  Respond with SCHEDULE to reserve a time to see the house or SEE to get a live look with a Realtor right now"
 		$nexmo.send_sms(msg,phone_number)		
+	end
+
+	def handle_time(phone_number)
+		minutes_until = TimeCheck.get_minutes
+		msg = "I will see you in about #{minutes_until} minutes"
+		$nexmo.send_sms(msg,phone_number)
 	end
 
 	def handle_see(phone_number)
