@@ -138,7 +138,7 @@ class HomeFinderNexmoController < NexmoBasicController
 				handle_time(phone_number)
 			else
 				puts "DID Not find matching KEYWORD"
-				handle_error(phone_number,msg)
+				handle_error(phone_number,keyword)
 			end
 		end
 
@@ -199,7 +199,8 @@ class HomeFinderNexmoController < NexmoBasicController
 		$nexmo.send_sms(msg,phone_number)
 	end
 
-	def handle_error(phone_number,msg)
+	def handle_error(phone_number,keyword)
+		msg = "Did not understand your keyword of: #{keyword}"
 		$nexmo.send_sms(msg,phone_number)
 	end
 end
