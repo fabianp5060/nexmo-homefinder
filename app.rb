@@ -136,6 +136,9 @@ class HomeFinderNexmoController < NexmoBasicController
 			when "TIME"
 				puts "Made it to Time"
 				handle_time(phone_number)
+			when "OMELET"
+				puts "Time till Omletes in Holmdel"
+				handle_omelet(phone_number)				
 			else
 				puts "DID Not find matching KEYWORD"
 				handle_error(phone_number,keyword)
@@ -169,6 +172,12 @@ class HomeFinderNexmoController < NexmoBasicController
 	def handle_time(phone_number)
 		minutes_until = TimeCheck.get_minutes
 		msg = "I will see you in about #{minutes_until} minutes"
+		$nexmo.send_sms(msg,phone_number)
+	end
+
+	def handle_omelet(phone_number)
+		minutes_until = TimeCheck.get_omelets
+		msg = "You will get your omelet in #{minutes_until} minutes"
 		$nexmo.send_sms(msg,phone_number)
 	end
 
