@@ -136,7 +136,7 @@ class HomeFinderNexmoController < NexmoBasicController
 			when "TIME", "WALTER"
 				puts "Made it to Time"
 				handle_time(phone_number)
-			when "OMELET", "HOMELET"
+			when "OMELET", "HOLMELET"
 				puts "Time till Omletes in Holmdel"
 				handle_omelet(phone_number)				
 			else
