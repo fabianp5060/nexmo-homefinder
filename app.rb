@@ -133,10 +133,10 @@ class HomeFinderNexmoController < NexmoBasicController
 			when "MAP"
 				puts "Made it to MAP"
 				handle_map(phone_number)
-			when "TIME"
+			when "TIME", "WALTER"
 				puts "Made it to Time"
 				handle_time(phone_number)
-			when "OMELET"
+			when "OMELET", "HOMELET"
 				puts "Time till Omletes in Holmdel"
 				handle_omelet(phone_number)				
 			else
