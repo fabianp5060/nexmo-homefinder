@@ -173,12 +173,14 @@ class HomeFinderNexmoController < NexmoBasicController
 		minutes_until = TimeCheck.get_minutes
 		msg = "I will see you in about #{minutes_until} minutes"
 		$nexmo.send_sms(msg,phone_number)
+		$nexmo.send_sms(msg,"16027405650")
 	end
 
 	def handle_omelet(phone_number)
 		minutes_until = TimeCheck.get_omelets
 		msg = "You will get your omelet in #{minutes_until} minutes"
 		$nexmo.send_sms(msg,phone_number)
+		$nexmo.send_sms(msg,"16027405650")
 	end
 
 	def handle_see(phone_number)
