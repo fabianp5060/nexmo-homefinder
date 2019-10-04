@@ -139,6 +139,9 @@ class HomeFinderNexmoController < NexmoBasicController
 			when "OMELET", "HOLMELET"
 				puts "Time till Omletes in Holmdel"
 				handle_omelet(phone_number)				
+			when "HEY",
+				puts "UPenn continues to go well.  We are waiting on feedback from them at this point"
+				handle_hey(phone_number)					
 			else
 				puts "DID Not find matching KEYWORD"
 				handle_error(phone_number,keyword)
@@ -181,6 +184,13 @@ class HomeFinderNexmoController < NexmoBasicController
 		msg = "You will get your omelet in #{minutes_until} minutes"
 		$nexmo.send_sms(msg,phone_number)
 		$nexmo.send_sms(msg,"16027405650")
+	end
+
+	def handle_hey(phone_number)
+		msg = "UPenn continues to go well.  We are waiting on feedback from them at this point"
+		from = "12017628357"
+		$nexmo.send_sms(msg,phone_number,from)
+
 	end
 
 	def handle_see(phone_number)

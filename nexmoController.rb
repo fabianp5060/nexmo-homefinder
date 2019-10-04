@@ -22,9 +22,10 @@ class NexmoBasicController
 	end
 
 
-	def send_sms(msg,to=nil)
-		puts "#{__method__}; SMS from: #{$did} to: #{to} msg: #{msg}"
-		return $client.sms.send(from: $did, to: to, text: msg)
+	def send_sms(msg,to=nil,from=nil)
+		from = $did unless from
+		puts "#{__method__}; SMS from: #{from} to: #{to} msg: #{msg}"
+		return $client.sms.send(from: from, to: to, text: msg)
 	end	
 
 	def normalize_numbers(num)
