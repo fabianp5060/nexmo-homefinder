@@ -190,7 +190,8 @@ class HomeFinderNexmoController < NexmoBasicController
 		msg = "UPenn continues to go well.  We are waiting on feedback from them at this point"
 		from = "12017628357"
 		to = phone_number == $did1 ? $did2 : $did1
-			
+		puts "My to: #{to}"
+		
 		$nexmo.send_sms(msg,to,from)
 
 	end
