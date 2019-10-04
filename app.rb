@@ -189,7 +189,9 @@ class HomeFinderNexmoController < NexmoBasicController
 	def handle_hey(phone_number)
 		msg = "UPenn continues to go well.  We are waiting on feedback from them at this point"
 		from = "12017628357"
-		$nexmo.send_sms(msg,phone_number,from)
+		to = phone_number == $did1 ? $did2 : $did1
+			
+		$nexmo.send_sms(msg,to,from)
 
 	end
 
@@ -269,6 +271,9 @@ class MyApp < Sinatra::Base
 	app_name = ENV['HOMEFINDER_APP_NAME']
 	app_id = ENV['HOMEFINDER_APP_ID']
 	$did = ENV['HOMEFINDER_DID']
+	$did1 = ENV['HOMEFINDER_DID1']
+	$did2 = ENV['HOMEFINDER_DID2']
+
 	$web_server = ENV['LB_WEB_SERVER2'] || JSON.parse(Net::HTTP.get(URI('http://127.0.0.1:4040/api/tunnels')))['tunnels'][0]['public_url']
 
 	# Create Nexmo Object
