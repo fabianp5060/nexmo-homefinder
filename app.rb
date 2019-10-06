@@ -187,11 +187,11 @@ class HomeFinderNexmoController < NexmoBasicController
 	end
 
 	def handle_hey(phone_number)
-		msg = "UPenn continues to go well.  We are waiting on feedback from them at this point"
+		msg = GetQuote.get_quote
 		from = "12017628357"
-		to = phone_number == $did1 ? $did2 : $did1
-		puts "My to: #{to}"
-		
+		to = phone_number == $did1 ? $did2 : nil
+		puts "My to: #{to}, msg: #{msg}, from: #{from}"
+
 		$nexmo.send_sms(msg,to,from)
 
 	end
