@@ -88,7 +88,8 @@ class HomeFinderRoutes < Sinatra::Base
 			puts "#{__method__} | DB Result : #{db.inspect}"
 
 
-			msg = "Hi there, we see you are close to a home that matches your search criteria.  Respond with SHOW to retrieve the MLS listing for the home or MAP to get directions sent to your phone"
+			# msg = "Hi there, we see you are close to a home that matches your search criteria.  Respond with SHOW to retrieve the MLS listing for the home or MAP to get directions sent to your phone"
+			msg = "Hi there! We see you are close to the cemetery for Joe's funeral. Respond with SHOW to see a picture of the grounds or MAP to get directions for the burial site sent to your phone"
 			$nexmo.send_sms(msg,buyer_number)
 		else
 			redirect "/homefinder?error=true&agent_number=#{params[:agent_number]}"
