@@ -162,13 +162,16 @@ class HomeFinderNexmoController < NexmoBasicController
 	end	
 
 	def handle_show(phone_number)
-		link = "https://www.njmls.com/listings/index.cfm?action=dsp.info&mlsnum=1840146"
-		msg = "Here is the link to the house: #{link}.  Respond with SCHEDULE to reserve a time to see the house or SEE to get a live look with a Realtor right now"
+		# link = "https://www.njmls.com/listings/index.cfm?action=dsp.info&mlsnum=1840146"
+		# msg = "Here is the link to the house: #{link}.  Respond with SCHEDULE to reserve a time to see the house or SEE to get a live look with a Realtor right now"
+		link = "https://www.findagrave.com/cemetery/45101/holy-cross-cemetery/photo#view-photo=91737784"
+		msg = "Here is a link to the burial plot map: #{link}. Respond with SCHEDULE to reserve a time to tour our facility for your loved one or SEE to get a live virtual tour with a Funeral Director now!	"
 		$nexmo.send_sms(msg,phone_number)
 	end
 
 	def handle_schedule(phone_number)
-		msg = "I will schedule a call thank you!.  Respond with SCHEDULE to reserve a time to see the house or SEE to get a live look with a Realtor right now"
+		# msg = "I will schedule a call thank you!.  Respond with SCHEDULE to reserve a time to see the house or SEE to get a live look with a Realtor right now"
+		msg = "I will schedule a call, thank you!  Or respond with SEE to get a live virtual tour of our burial grounds now!"
 		$nexmo.send_sms(msg,phone_number)		
 	end
 
@@ -212,14 +215,17 @@ class HomeFinderNexmoController < NexmoBasicController
 
 		#If agent exists for Buyer send message, otherwise send error message
 		client_link = "#{$tokbox_url}#{phone_number}?userName=Buyer&skip=yes"
-		buyer_msg = "Realtor: #{client_link}" unless buyer_msg
+		# buyer_msg = "Realtor: #{client_link}" unless buyer_msg
+		buyer_msg = "Funeral Director: #{client_link}" unless buyer_msg
 		$nexmo.send_sms(buyer_msg,phone_number)
 		
 	end
 
 	def handle_map(phone_number)
-		map = 'https://goo.gl/maps/aFsuwgrb3vy'
-		msg = "Click on the link to get directions to the house: #{map}"
+		# map = 'https://goo.gl/maps/aFsuwgrb3vy'
+		# msg = "Click on the link to get directions to the house: #{map}"
+		map = 'https://goo.gl/maps/JHz762EhgcHN6xNS7'
+		msg = "Click on the link to get directions to the Burial Site: #{map}"
 		$nexmo.send_sms(msg,phone_number)
 	end
 
