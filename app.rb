@@ -119,7 +119,7 @@ class HomeFinderNexmoController < NexmoBasicController
 		phone_number = request_payload['msisdn']	
 
 		puts "Got my keyword: #{keyword}"
-		if request_payload != nil
+		if request_payload != nil && request_payload.includes('api-key') == false
 			puts "found the keyword: #{keyword}"
 			case keyword
 			when "SHOW"
