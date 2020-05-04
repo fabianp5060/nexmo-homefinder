@@ -1,9 +1,9 @@
-#\ -p 9291 -o 0.0.0.0
+#\ -p 9292 -o 0.0.0.0
 require_relative 'app'
 require_relative 'setup/aws_config'
 
 #AWS Config - App Specific
-PORT = 9291 #Update 1st line of file as well
+PORT = 9292 #Update 1st line of file as well
 DNS_NAME = "demo1-lb.petesweb.io"
 
 #AWS Config - AWS Environement Specific
