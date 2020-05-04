@@ -2,6 +2,9 @@
 require_relative 'app'
 require_relative 'setup/aws_config'
 
+#Auto Build AWS Info
+ok_to_build_aws = false
+
 #AWS Config - App Specific
 PORT = 9292 #Update 1st line of file as well
 DNS_NAME = "demo#{PORT.to_s[-1]}-lb.petesweb.io"
@@ -16,23 +19,24 @@ AWS1 = "i-08a6f7823672a143c"
 
 
 # When starting app, configure AWS for load balancer, listeners, target groups and update dns
-load_balancer_arn,target_group_arn = AWSConfig.create_aws_configuration(
-	PORT,
-	SUBNETS,
-	SECURITY_GROUPS,
-	VPC_ID,
-	SSL_CERT_ARN,
-	DNS_NAME,
-	DNS_HOSTING_ZONE,
-	AWS1
-)
-
+if ok_to_build_aws
+	load_balancer_arn,target_group_arn = AWSConfig.create_aws_configuration(
+		PORT,
+		SUBNETS,
+		SECURITY_GROUPS,
+		VPC_ID,
+		SSL_CERT_ARN,
+		DNS_NAME,
+		DNS_HOSTING_ZONE,
+		AWS1
+	)
+end
 # Run sintatra app
 run MyApp
 
 # When shuting down app, delete previously configured AWS stuff
 at_exit do 
-	AWSConfig.remove_aws_configuration(load_balancer_arn,target_group_arn)
+	AWSConfig.remove_aws_configuration(load_balancer_arn,target_group_arn) if ok_to_build_aws
 end
 
 
