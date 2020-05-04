@@ -4,7 +4,7 @@ require_relative 'setup/aws_config'
 
 #AWS Config - App Specific
 PORT = 9292 #Update 1st line of file as well
-DNS_NAME = "demo1-lb.petesweb.io"
+DNS_NAME = "demo#{PORT.to_s[-1]}-lb.petesweb.io"
 
 #AWS Config - AWS Environement Specific
 SUBNETS = ["subnet-987775fc","subnet-284dd170"]
