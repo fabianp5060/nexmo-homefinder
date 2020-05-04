@@ -27,6 +27,11 @@ class HomeFinderRoutes < Sinatra::Base
 		response = $nexmo.home_finder_event(params,root_url)
 	end
 
+	get '/event_home' do
+		root_url = request.base_url
+		puts "#{__method__} | My Params: #{params}"
+		response = $nexmo.home_finder_event(params,root_url)
+	end
 # AWS Health Check
 	get '/' do; 200; end
 
@@ -295,6 +300,7 @@ class MyApp < Sinatra::Base
 
 	$nexmo = HomeFinderNexmoController.new  	
 	$nexmo.update_webserver(app_id,$web_server,app_name)
+	$nexmo.update_number("US",$did,{moHttpUrl: "#{$web_server}/event_home"})
 
 	UserDB.auto_migrate!
 
