@@ -280,7 +280,8 @@ class MyApp < Sinatra::Base
 	$did1 = ENV['HOMEFINDER_DID1']
 	$did2 = ENV['HOMEFINDER_DID2']
 
-	$web_server = ENV['LB_WEB_SERVER2'] || JSON.parse(Net::HTTP.get(URI('http://127.0.0.1:4040/api/tunnels')))['tunnels'][0]['public_url']
+	$web_server = ENV[AWS_WEB_SERVER]
+	# $web_server = ENV['LB_WEB_SERVER2'] || JSON.parse(Net::HTTP.get(URI('http://127.0.0.1:4040/api/tunnels')))['tunnels'][0]['public_url']
 
 	# Create Nexmo Object
 	logger = Logger.new(STDOUT)
