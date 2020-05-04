@@ -280,7 +280,7 @@ class MyApp < Sinatra::Base
 	$did1 = ENV['HOMEFINDER_DID1']
 	$did2 = ENV['HOMEFINDER_DID2']
 
-	$web_server = ENV[AWS_WEB_SERVER]
+	$web_server = ENV['AWS_WEB_SERVER']
 	# $web_server = ENV['LB_WEB_SERVER2'] || JSON.parse(Net::HTTP.get(URI('http://127.0.0.1:4040/api/tunnels')))['tunnels'][0]['public_url']
 
 	# Create Nexmo Object
@@ -297,4 +297,9 @@ class MyApp < Sinatra::Base
 	$nexmo.update_webserver(app_id,$web_server,app_name)
 
 	UserDB.auto_migrate!
+
+	puts "!=========================!"
+	puts "Using EC2 not LoadBalancer: #{$web_server}"
+	puts "To use loadbalancer, uncomment $web_server from app.rb, and set ok_to_build_aws to true in config.ru"
+	puts "!=========================!"
 end
