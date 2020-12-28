@@ -5,7 +5,7 @@ class TimeCheck
 	def self.get_minutes
 		require 'time'
 		t1 = Time.now
-		t2 = Time.new(2020, 03, 2, 22, 30, 00)
+		t2 = Time.new(2021, 01, 18, 18, 00, 00)
 		seconds_until = t2 - t1
 		minutes_until = seconds_until/60
 

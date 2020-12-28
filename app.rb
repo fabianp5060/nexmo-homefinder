@@ -2,13 +2,15 @@
 #
 STDOUT.sync = true
 
-require 'nexmo'
+# require 'nexmo'
+require 'vonage'
+require 'net/http'
 require 'sinatra'
 require 'json'
 require 'dm-core'
 require 'dm-migrations'
 require 'json'
-
+require 'logger'
 require_relative 'nexmoController'
 require_relative 'time_check'
 
@@ -285,12 +287,12 @@ class MyApp < Sinatra::Base
 	$did1 = ENV['HOMEFINDER_DID1']
 	$did2 = ENV['HOMEFINDER_DID2']
 
-	$web_server = ENV['AWS_WEB_SERVER']
-	# $web_server = ENV['LB_WEB_SERVER2'] || JSON.parse(Net::HTTP.get(URI('http://127.0.0.1:4040/api/tunnels')))['tunnels'][0]['public_url']
+	# $web_server = ENV['AWS_WEB_SERVER']
+	$web_server = ENV['LB_WEB_SERVER1'] || JSON.parse(Net::HTTP.get(URI('http://127.0.0.1:4040/api/tunnels')))['tunnels'][0]['public_url']
 
 	# Create Nexmo Object
 	logger = Logger.new(STDOUT)
-	$client = Nexmo::Client.new(
+	$client = Vonage::Client.new(
 	  logger: logger,	
 	  api_key: key,
 	  api_secret: sec,
@@ -300,7 +302,7 @@ class MyApp < Sinatra::Base
 
 	$nexmo = HomeFinderNexmoController.new  	
 	$nexmo.update_webserver(app_id,$web_server,app_name)
-	$nexmo.update_number("US",$did,{moHttpUrl: "#{$web_server}/event_home"})
+	$nexmo.update_number("US",$did,app_id,{moHttpUrl: "#{$web_server}/event_home"})
 
 	UserDB.auto_migrate!
 

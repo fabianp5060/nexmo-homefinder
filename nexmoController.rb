@@ -1,22 +1,61 @@
 class NexmoBasicController
 
+	# def update_webserver(app_id,web_server,app_name)
+	# 	puts "My vars: ID: #{app_id}, WS: #{web_server}, NAME: #{app_name}"
+	# 	application = $client.applications.update(
+	# 		app_id,
+	# 		{
+	# 			type: "voice",
+	# 			name: app_name,
+	# 			answer_url: "#{$web_server}/answer_home", 
+	# 			event_url: "#{$web_server}/event_home"
+	# 		}
+	# 	)
+	# 	puts "Updated nexmo application name:\n  #{application.name}\nwith webhooks:\n  #{application.voice.webhooks[0].endpoint}\n  #{application.voice.webhooks[1].endpoint}"
+	# end
+
 	def update_webserver(app_id,web_server,app_name)
 		puts "My vars: ID: #{app_id}, WS: #{web_server}, NAME: #{app_name}"
 		application = $client.applications.update(
 			app_id,
 			{
-				type: "voice",
 				name: app_name,
-				answer_url: "#{$web_server}/answer_home", 
-				event_url: "#{$web_server}/event_home"
-			}
+				capabilities: {
+					voice: {
+						webhooks: {							
+							answer_url: {
+								address: "#{$web_server}/answer_home",
+								http_method: "GET"
+							},
+							event_url: {
+								address: "#{$web_server}/event_home",
+								http_method: "POST"
+							}
+						}
+					},
+					messages: {
+						webhooks: {
+							inbound_url: {
+								address: "#{$web_server}/event_home",
+								http_method: "POST"
+							},
+							status_url: {
+								address: "#{$web_server}/event_home",
+								http_method: "POST"
+							}
+						}
+					}
+				}
+			}				
 		)
-		puts "Updated nexmo application name:\n  #{application.name}\nwith webhooks:\n  #{application.voice.webhooks[0].endpoint}\n  #{application.voice.webhooks[1].endpoint}"
+		puts "My application #{application.inspect}"
+		puts "Updated nexmo application name:\n  #{application.name}\nwith webhooks:\n  #{application.capabilities.voice.webhooks.event_url.http_method} #{application.capabilities.voice.webhooks.event_url.address}\n  #{application.capabilities.voice.webhooks.answer_url.http_method} #{application.capabilities.voice.webhooks.answer_url.address}"
+		return application
 	end
 
-	def update_number(country,msisdn,update_params)
+	def update_number(country,msisdn,app_id,update_params)
 		puts "#{__method__} | My vars: Country Code: #{country}, Number: #{msisdn}, Params: #{update_params}"
-		update_params.merge!({country: country, msisdn: msisdn})
+		update_params.merge!({country: country, msisdn: msisdn, app_id: app_id})
 
 		number = $client.numbers.update(update_params)
 	end
